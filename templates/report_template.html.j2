@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ report_title }}</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
+      h1 { color: #444; }
+      table {
+        border-collapse: collapse;
+        margin-bottom: 25px;
+        width: 90%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+      th, td {
+        border: 1px solid #ddd;
+        text-align: left;
+        padding: 12px;
+      }
+      th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+      }
+      tr:nth-child(even) { background-color: #f9f9f9; }
+      tr:hover { background-color: #f1f1f1; }
+      .download-link {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #e7f3fe;
+        border-left: 5px solid #2196F3;
+        font-style: italic;
+      }
+      .download-link a {
+        color: #2196F3;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .download-link a:hover {
+        text-decoration: underline;
+      }
+    </style>
+</head>
+<body>
+    <h1>{{ report_title }}</h1>
+
+    {% if csv_data and csv_headers %}
+    <table>
+        <thead>
+            <tr>
+                {% for header in csv_headers %}
+                <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in csv_data %}
+            <tr>
+                {% for header in csv_headers %}
+                {# Ensure the key exists, provide empty string if not #}
+                <td>{{ row[header] | default('', true) }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% elif csv_data and not csv_headers and csv_data | length > 0 %}
+    <table>
+        <tbody>
+            {% for row_list in csv_data %} {# Assuming list of lists if no headers #}
+            <tr>
+                {% for item in row_list %}
+                <td>{{ item | default('', true) }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No data to display or the CSV file is empty.</p>
+    {% endif %}
+
+    <div class="download-link">
+        <a href="./{{ download_csv_file_name }}">{{ download_csv_file_name }}</a>
+        <br>
+        (Right click the link above and select "Save Link As..." to download the source CSV file.)
+    </div>
+</body>
+</html>

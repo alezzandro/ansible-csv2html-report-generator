@@ -1,0 +1,92 @@
+---
+- name: Convert CSV to HTML (Templated) and Deploy to Remote Server
+  hosts: all # Replace with your remote server's inventory name or IP
+  gather_facts: true
+
+  vars:
+    local_csv_file_path: "./report-example.csv" # Path to your local CSV file
+    report_name: "report" # Base name for the report files
+    remote_report_dir: "/usr/local/ansible/report"
+    http_server_base_url: "http://{{ ansible_host }}" # Adjust if needed
+    local_temp_html_path: "/tmp" # Local temp directory for generated HTML
+
+  tasks:
+    - name: Define HTML and CSV file names
+      ansible.builtin.set_fact:
+        current_date: "{{ ansible_date_time.date }}"
+        html_file_name: "{{ ansible_date_time.date }}-{{ report_name }}.html"
+        csv_file_name: "{{ ansible_date_time.date }}-{{ report_name }}.csv"
+      run_once: true # Date should be consistent for all hosts if multiple
+      delegate_to: localhost
+
+    - name: Read CSV file locally
+      community.general.read_csv:
+        path: "{{ local_csv_file_path }}"
+        #dictreader: true # Reads rows as dictionaries
+      register: csv_content
+      delegate_to: localhost
+      failed_when: "csv_content.failed or (csv_content.list is not defined and csv_content.lines is not defined)"
+
+    - name: Prepare CSV headers (if dictreader was successful)
+      ansible.builtin.set_fact:
+        parsed_csv_headers: "{{ csv_content.list[0].keys() | list if csv_content.list and csv_content.list | length > 0 else [] }}"
+        parsed_csv_data: "{{ csv_content.list if csv_content.list else [] }}"
+      when: csv_content.list is defined
+      delegate_to: localhost
+
+    - name: Prepare CSV data (if dictreader failed or was not used, fallback to list of lists)
+      ansible.builtin.set_fact:
+        # Assuming first line is header if not using dictreader, and it's in 'lines'
+        parsed_csv_headers: "{{ csv_content.lines[0] if csv_content.lines and csv_content.lines | length > 0 else [] }}"
+        parsed_csv_data: "{{ csv_content.lines[1:] if csv_content.lines and csv_content.lines | length > 1 else [] }}"
+      when: csv_content.list is not defined and csv_content.lines is defined
+      delegate_to: localhost
+      # Note: This fallback for 'lines' would require the template to handle list of lists differently for rows.
+      # The current template is optimized for dictreader output (list of dictionaries).
+      # For simplicity and robustness with headers, dictreader:yes is preferred.
+
+    - name: Generate HTML file from template locally
+      ansible.builtin.template:
+        src: "report_template.html.j2" # Path to your Jinja2 template file
+        dest: "{{ local_temp_html_path }}/{{ html_file_name }}"
+        mode: '0644'
+      vars:
+        report_title: "{{ report_name | capitalize }} - {{ current_date }}"
+        csv_headers: "{{ parsed_csv_headers }}"
+        csv_data: "{{ parsed_csv_data }}"
+        download_csv_file_name: "{{ csv_file_name }}"
+      delegate_to: localhost
+      # This task runs on the Ansible control node
+
+    - name: Ensure report directory exists on remote server
+      ansible.builtin.file:
+        path: "{{ remote_report_dir }}"
+        state: directory
+        mode: '0755'
+      become: true
+
+    - name: Copy generated HTML file to remote server
+      ansible.builtin.copy:
+        src: "{{ local_temp_html_path }}/{{ html_file_name }}"
+        dest: "{{ remote_report_dir }}/{{ html_file_name }}"
+        mode: '0644'
+      become: true
+
+    - name: Copy source CSV file to remote server
+      ansible.builtin.copy:
+        src: "{{ local_csv_file_path }}" # Original local CSV
+        dest: "{{ remote_report_dir }}/{{ csv_file_name }}" # Renamed on remote
+        mode: '0644'
+      become: true
+
+    - name: Clean up temporary local HTML file
+      ansible.builtin.file:
+        path: "{{ local_temp_html_path }}/{{ html_file_name }}"
+        state: absent
+      delegate_to: localhost
+
+    - name: Display URL to access the HTML report
+      ansible.builtin.debug:
+        msg: "Report available at: {{ http_server_base_url }}{{ remote_report_dir | urlencode }}/{{ html_file_name }}"
+      # If your web server maps remote_report_dir to a different URL path (e.g., /reports), adjust here:
+      # msg: "Report available at: {{ http_server_base_url }}/reports/{{ html_file_name }}"
