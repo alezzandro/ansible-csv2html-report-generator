@@ -1,4 +1,3 @@
 .vagrant/*
 Vagrantfile
-*.html
 ansible-navigator.log

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report - 2025-05-20</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
+      h1 { color: #444; }
+      table {
+        border-collapse: collapse;
+        margin-bottom: 25px;
+        width: 90%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+      th, td {
+        border: 1px solid #ddd;
+        text-align: left;
+        padding: 12px;
+      }
+      th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+      }
+      tr:nth-child(even) { background-color: #f9f9f9; }
+      tr:hover { background-color: #f1f1f1; }
+      .download-link {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #e7f3fe;
+        border-left: 5px solid #2196F3;
+        font-style: italic;
+      }
+      .download-link a {
+        color: #2196F3;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .download-link a:hover {
+        text-decoration: underline;
+      }
+    </style>
+</head>
+<body>
+    <h1>Report - 2025-05-20</h1>
+
+        <table>
+        <thead>
+            <tr>
+                                <th>Hostname</th>
+                                <th>ManagementIP</th>
+                                <th>Model</th>
+                                <th>IOSVersion</th>
+                                <th>SerialNumber</th>
+                                <th>Uptime</th>
+                                <th>InterfaceGig0/1_Status</th>
+                                <th>InterfaceGig0/1_Protocol</th>
+                            </tr>
+        </thead>
+        <tbody>
+                        <tr>
+                                                <td>CORE-SW-01</td>
+                                                <td>192.168.1.1</td>
+                                                <td>C9300-48UXM</td>
+                                                <td>17.03.04</td>
+                                                <td>FCW2345A0BC</td>
+                                                <td>35 days 4:10</td>
+                                                <td>up</td>
+                                                <td>up</td>
+                            </tr>
+                        <tr>
+                                                <td>ACCESS-SW-LOBBY</td>
+                                                <td>10.10.20.5</td>
+                                                <td>C2960X-24PS-L</td>
+                                                <td>15.2(7)E2</td>
+                                                <td>FOC1920X1YZ</td>
+                                                <td>120 days 11:22</td>
+                                                <td>up</td>
+                                                <td>up</td>
+                            </tr>
+                        <tr>
+                                                <td>EDGE-RTR-01</td>
+                                                <td>172.16.0.1</td>
+                                                <td>ISR4331/K9</td>
+                                                <td>16.09.07</td>
+                                                <td>FTX2115Z7EF</td>
+                                                <td>88 days 1:50</td>
+                                                <td>up</td>
+                                                <td>up</td>
+                            </tr>
+                        <tr>
+                                                <td>DIST-SW-01</td>
+                                                <td>192.168.1.2</td>
+                                                <td>C9500-16X</td>
+                                                <td>17.03.04</td>
+                                                <td>CAT2401C4GH</td>
+                                                <td>33 days 8:05</td>
+                                                <td>down</td>
+                                                <td>down</td>
+                            </tr>
+                        <tr>
+                                                <td>WLC-MAIN</td>
+                                                <td>10.5.5.10</td>
+                                                <td>AIR-CT5520-K9</td>
+                                                <td>8.10.151.0</td>
+                                                <td>FCH2250B0KL</td>
+                                                <td>205 days 17:30</td>
+                                                <td>N/A</td>
+                                                <td>N/A</td>
+                            </tr>
+                        <tr>
+                                                <td>ASA-FW-01</td>
+                                                <td>10.0.0.1</td>
+                                                <td>ASA5516</td>
+                                                <td>9.16(1)</td>
+                                                <td>JMX2040P0MN</td>
+                                                <td>450 days 2:15</td>
+                                                <td>up</td>
+                                                <td>up</td>
+                            </tr>
+                        <tr>
+                                                <td>CORE-RTR-02</td>
+                                                <td>172.16.100.5</td>
+                                                <td>ASR1001-X</td>
+                                                <td>XE 17.6.2</td>
+                                                <td>FOX2305PQR</td>
+                                                <td>60 days 0:30</td>
+                                                <td>up</td>
+                                                <td>up</td>
+                            </tr>
+                        <tr>
+                                                <td>DMZ-SW-01</td>
+                                                <td>10.100.1.1</td>
+                                                <td>N9K-C93180YC-EX</td>
+                                                <td>9.3(5)</td>
+                                                <td>SAL2230PQRS</td>
+                                                <td>95 days 14:00</td>
+                                                <td>up</td>
+                                                <td>up</td>
+                            </tr>
+                    </tbody>
+    </table>
+    
+    <div class="download-link">
+        <a href="./2025-05-20-report.csv">2025-05-20-report.csv</a>
+        <br>
+        (Right click the link above and select "Save Link As..." to download the source CSV file.)
+    </div>
+</body>
