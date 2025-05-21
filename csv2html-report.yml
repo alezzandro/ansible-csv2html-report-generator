@@ -6,7 +6,7 @@
   vars:
     local_csv_file_path: "./report-example.csv" # Path to your local CSV file
     report_name: "report" # Base name for the report files
-    remote_report_dir: "/usr/local/ansible/report"
+    remote_report_dir: "/var/lib/awx/public/static/report"
     http_server_base_url: "http://{{ ansible_host }}" # Adjust if needed
     local_temp_html_path: "/tmp" # Local temp directory for generated HTML
 
